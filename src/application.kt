@@ -81,6 +81,7 @@ fun main() {
         Thread.sleep(500)
         time_0 += step
     }
+
     println("\n" + "=".repeat(60))
     println("\nEnd")
 }
