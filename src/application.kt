@@ -73,6 +73,7 @@ fun main() {
     println("\nНачало симуляции на $sTime секунд (шаг: $step сек)")
     println("=".repeat(60))
 
+
     var time_0 = 0.0
     while (time_0 < sTime) {
         println("\n--- Время: ${"%.1f".format(time_0)} сек ---")
