@@ -39,9 +39,8 @@ class Human(
         y = _toY.toDouble()
         println("$name $surname $second_name: перемещен в: $x, $y")
     }
-
-
 }
+
 fun main() {
     println("=== СИМУЛЯЦИЯ RANDOM WALK ===")
     val petya = Human("ааа", "ааа", "аа", 18, 0.9)
