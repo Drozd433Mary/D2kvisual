@@ -40,12 +40,7 @@ class Human(
         println("$name $surname $second_name: перемещен в: $x, $y")
     }
 
-    fun printStatus() {
-        val fullName = "$name $surname $second_name"
-        val gr = Math.toDegrees(kuda).toInt()
-        println("$fullName: позиция (${"%.1f".format(x)}, ${"%.1f".format(y)}), " +
-                "скорость ${"%.1f".format(speed)} м/с, направление: ${gr}°")
-    }
+
 }
 
 fun main() {
@@ -72,7 +67,6 @@ fun main() {
 
     println("\nНачало симуляции на $sTime секунд (шаг: $step сек)")
     println("=".repeat(60))
-
 
     var time_0 = 0.0
     while (time_0 < sTime) {
