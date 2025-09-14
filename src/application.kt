@@ -39,8 +39,6 @@ class Human(
         y = _toY.toDouble()
         println("$name $surname $second_name: перемещен в: $x, $y")
     }
-
-
 }
 
 fun main() {
@@ -76,7 +74,6 @@ fun main() {
         Thread.sleep(500)
         time_0 += step
     }
-
 
     println("\n" + "=".repeat(60))
     println("\nEnd")
