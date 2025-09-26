@@ -1,7 +1,7 @@
 import kotlin.math.*
 import kotlin.random.Random
 
-class Human(
+open class Human(
     var name: String,
     var surname: String,
     var second_name: String,
@@ -10,25 +10,25 @@ class Human(
 ) {
     var x: Double = 0.0
     var y: Double = 0.0
-    private var kuda: Double = Random.nextDouble(0.0, 2 * PI)
+    protected var direction: Double = Random.nextDouble(0.0, 2 * PI)
 
     init {
         println("Создан объект: $name $surname $second_name, возраст: $age, скорость: $current_speed м/с")
     }
 
-    fun move(timeStep: Double) { // move с Random Walk
-        val kudaChange = Random.nextDouble(-PI/4, PI/4) // случайное изменение направления 45 градусов
-        kuda = (kuda + kudaChange) % (2 * PI)
+    open fun move(timeStep: Double) { // move с Random Walk
+        val direction_Change = Random.nextDouble(-PI/4, PI/4) // случайное изменение направления 45 градусов
+        direction = (direction + direction_Change) % (2 * PI)
 
         val speedChange = current_speed * Random.nextDouble(-0.3, 0.3) // случайное изменение скорости ±30%
         current_speed = max(0.1, current_speed + speedChange)
 
-        val dx = current_speed * timeStep * cos(kuda) // расчет перемещения по осям
-        val dy = current_speed * timeStep * sin(kuda)
+        val dx = current_speed * timeStep * cos(direction) // расчет перемещения по осям
+        val dy = current_speed * timeStep * sin(direction)
 
         x += dx // меняем координаты
         y += dy
-        val gr = Math.toDegrees(kuda).toInt()
+        val gr = Math.toDegrees(direction).toInt()
         val fullName = "$name $surname $second_name"
         println("$fullName: переместился в (${"%.1f".format(x)}, ${"%.1f".format(y)}), " +
                 "скорость: ${"%.1f".format(current_speed)} м/с, направление: ${gr}°")
@@ -38,6 +38,25 @@ class Human(
         x = _toX.toDouble()
         y = _toY.toDouble()
         println("$name $surname $second_name: перемещен в: $x, $y")
+    }
+}
+class Driver(
+    name: String,
+    surname: String,
+    second_name: String,
+    age: Int,
+    current_speed: Double
+) : Human(name, surname, second_name, age, current_speed) {
+
+    override fun move(timeStep: Double) {
+        val dx = current_speed * timeStep * cos(direction)
+        val dy = current_speed * timeStep * sin(direction)
+        x+=dx
+        y+=dy
+        val gr = Math.toDegrees(direction).toInt()
+        val fullName = "$name $surname $second_name"
+        println("$fullName (Driver): переместился в (${"%.1f".format(x)}, ${"%.1f".format(y)}), " +
+                "скорость: ${"%.1f".format(current_speed)} м/с, направление: ${gr}°")
     }
 }
 
@@ -54,7 +73,7 @@ fun main() {
         Human("Егор", "Григорьев", "Васильевич", 19, 1.3),
         Human("Сергей", "Демин", "Алексеевич", 19, 1.4),
         Human("Артем", "Добромилов", "Александрович", 19, 1.5),
-        Human("Мария", "Дроздова", "Геннадьевна", 19, 1.6)
+        Driver("Мария", "Дроздова", "Геннадьевна", 19, 1.6)
     )
     val sTime = 30.0
     val step = 1.0
@@ -64,7 +83,13 @@ fun main() {
     while (time_0 < sTime) {
         println("\n--- Время: ${"%.1f".format(time_0)} сек ---")
 
-        humans.forEach { it.move(step) } // шаги
+        val threads = humans.map { human ->
+            Thread {
+                human.move(step)
+            }
+        }
+        threads.forEach { it.start() }
+        threads.forEach { it.join() }
         Thread.sleep(500)
         time_0 += step }
     println("\n" + "=".repeat(60))
